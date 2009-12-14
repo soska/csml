@@ -1,0 +1,113 @@
+h1. CSML 
+
+h2. Generate HTML tags from CSS selectors.
+
+When writting CakePHP views or WordPress templates I *hate* mixing large chunks of PHP with with HTML and  and I loathe echoing HTML tags as concatenated strings. Also I always forget the order of the arguments in frameworks' HTML helpers.
+
+So, this is a very simple way to generate HTML tags without leaving your <?php ?> blocks using a simple syntax that looks a lot like CSS selectors.
+
+The file csml.php contains the csml class and two helper functions: <code>t()</code> and <code>en()</code> to make lazy people like me, even happier.
+
+h2. t($selector)
+
+This function takes a _CSS…ish_ selector and outputs an HTML tag. 
+<pre><code>
+<?php
+	t('div#container.index'); // output: <div id="container" class="index">
+		echo "lorem ipsum dolor sit amet";
+	t('/div') // output: </div>	
+?>
+</code></pre>
+
+As you can see in the example above, in order to close a tag, you only have to put a slash (<code>/</code>) before the tag. If you use a selector with id's and/or classes, it will append a helpfull comment to the closing tag. Very useful when you are examining your source.
+
+<pre><code>
+<?php
+	t('div#container'); // output: <div id="container" class="index">
+		echo "lorem ipsum dolor sit amet";
+	t('/div#container') // output: </div> <!-- /#container -->	
+?>
+</code></pre>
+
+For autoclosing tags just append the slash at the end of the tag name:
+<pre><code>
+<?php
+	t('br/.clear'); // output: <br class="clear"/>
+?>
+</code></pre>
+
+You can have only one id per tag, but as any classes as you want, separated by dots. Only remember: id's always has to be declared before classes.
+<pre><code>
+<?php
+	t('div#an-id.a-class.another-class.yet-another-class'); // this works as expected.
+	t('div.a-class.another-class.yet-another-class'); // this works too
+	t('div.#an-id'); // and this!
+	t('div.a-class.another-class#an-id'); // This is dangerous and could kill some kittens
+?>
+</code></pre>
+
+h3. Attributes
+
+If you need to pass extra attributes to your tag, you have to options:
+
+1: You can declared them right into your selector using something like CSS PseudoClases. Example:
+<pre><code>
+<?php
+
+	// useful for links
+	t('a.button[href="http://google.com" title="google something"]'); 
+	 echo "Go to Google";
+	t('/a');
+
+	// or images	
+	t('img.button[src="image.jpg" alt="A beautiful image"]/'); 
+?>
+</code></pre>
+
+2: Sometimes you want to generate attributes from some other PHP code, and excessive concatenation looks ugly. So you can pass an associative array of attributes as the second parameter.
+
+<pre><code>
+<?php
+
+	t('a.button',array('href'=>'http://google.com','title'=>'google something')); 
+?>
+</code></pre>
+
+
+h2. en($content,$selector);
+
+This function will enclose any string within other tags generated from the passed selector or selectors. Example:
+
+<pre><code>
+<?php
+	// useful for links
+	en("Go to Google",'a.button[href="http://google.com"]');
+	// output: <a href="http://google.com"" class="button">Go to Google</a>
+?>
+</code></pre>
+
+If the second argument is an array of selectors, then the content will be nested into all this selectors, being the last one, the deepest level.
+
+<pre><code>
+<?php
+	// useful for links
+	$selectors = array(
+		'ul.navigation',
+		'li',
+		'a.button[href="http://google.com]',
+		);
+	en("Go to Google",$selectors);
+	// output: <ul class="navigation><li><a href="http://google.com"" class="button">Go to Google</a></li></ul>
+?>
+</code></pre>
+
+h2. Requirements
+This class requires PHP 5.2 and a can of Diet Coke.
+
+h2. Epilogue
+Please take into consideration that I'm not a real programmer, so if you find some obvious or clever way to make this little class better, feel free to fork it. Please.
+
+Also, if you find it useful and actually use it, let me know. I'm just starting in this OpenSource thing and I may need to get excited :P
+
+
+* Both functions have more arguments, but you have to read the source for those.

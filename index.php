@@ -11,6 +11,16 @@ t('div#container');
 			en('Login',array('li','a[href="/login"]'));
 			en('Signup',array('li','a[href="/signup"]'));
 		t('/');
+		
+		// useful for links
+		$selectors = array(
+			'ul.navigation',
+			'li',
+			'a.button[href="http://google.com"]',
+			);
+		en("Go to Google",$selectors);
+		// output: <ul class="navigation><li><a href="http://google.com"" class="button">Go to Google</a></li></ul>
+				
 	t('/div#content');
 t('/div#container');
 ?>
