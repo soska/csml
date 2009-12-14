@@ -102,9 +102,11 @@ If the second argument is an array of selectors, then the content will be nested
 </code></pre>
 
 h2. Requirements
+
 This class requires PHP 5.2 and a can of Diet Coke.
 
 h2. Epilogue
+
 Please take into consideration that I'm not a real programmer, so if you find some obvious or clever way to make this little class better, feel free to fork it. Please.
 
 Also, if you find it useful and actually use it, let me know. I'm just starting in this OpenSource thing and I may need to get excited :P
