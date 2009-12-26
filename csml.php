@@ -44,6 +44,7 @@ class csml {
 
 	static private $chain = array();
 	static private $tabsCount = 0;
+	static public $globalFormat = false;
 	
 	/**
 	 * Generate HTML tags using CSS selectors
@@ -170,6 +171,11 @@ class csml {
 	 */
 	private function format($tag,$format,$closing ){
 		$tabs = '';
+		
+		if (self::$globalFormat !== false) {
+			$format = self::$globalFormat;
+		}
+		
 		switch ($format) {
 			case BREAK_AND_TABS:
 				$tabs = str_pad($tabs,self::$tabsCount-1,"\t");			
