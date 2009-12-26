@@ -69,10 +69,11 @@ class csml {
 				
 		// separate selector into parts
 		list($element,$id,$classes) = self::getSelectorParts($selector);		
+		
 
 		// defaul $element to 'div'
 		$element = (empty($element))?'div':$element;
-		
+
 		// if there's a closing slash in element name
 		$slashPosition = strpos($element,"/");
 		// if the slash is at the start,  we skip the attributes processing
@@ -150,7 +151,9 @@ class csml {
 		$id = (isset($parts[2])?$parts[2]:'');
 		$classes = (isset($parts[3])?$parts[3]:'');
 		if ($element == '/') {			
-			$element = self::$chain[count(self::$chain)-1];
+			if (!empty(self::$chain)) {
+				$element .= self::$chain[count(self::$chain)-1];
+			}
 		}
 		// get rid of the selector
 		return array($element,$id,$classes);
@@ -201,10 +204,12 @@ class csml {
 	 */
 	function entag($content,$selector = "div",$params='',$format=INLINE_WITH_TABS,$comment=''){	
 		$return = '';
+		$selector = explode('>',$selector);
 		if (is_array($selector)) {
 			$return = $content;
 			$selectors = array_reverse($selector);
 			foreach ($selectors as $selector) {
+				$selector = trim($selector);
 				$return  = self::tag($selector,$params,$format,$comment).$return.self::tag("/$selector",'',$format);
 			}
 		}else{
